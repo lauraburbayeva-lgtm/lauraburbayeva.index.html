@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Электронный навигатор ВШК: Качество современного урока</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; font-size: 10pt; }
+            .shadow-lg, .shadow-md, .shadow-sm { box-shadow: none !important; }
+            .border { border-color: #cbd5e1 !important; }
+            .page-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-emerald-900 via-emerald-800 to-slate-900 text-white shadow-md no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="p-3 bg-emerald-500/20 rounded-xl border border-emerald-500/30">
+                    <i class="fa-solid fa-compass text-2xl text-emerald-100"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Электронный навигатор ВШК: от контроля к развитию</h1>
+                    <p class="text-xs sm:text-sm text-emerald-100 font-light">Направление: «Качество современного урока» (33 критерия / 99 баллов макс.)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 text-xs bg-emerald-800/60 px-3 py-2 rounded-lg border border-emerald-700/50">
+                <i class="fa-solid fa-bolt text-emerald-400"></i>
+                <span>Автоматический генератор решений, SWOT, справок и мониторинга</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- Metadata Section -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 no-print transition-all">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                <i class="fa-solid fa-id-card text-emerald-600 mr-2"></i>Параметры экспертной проверки урока
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">ФИО Учителя</label>
+                    <input type="text" id="teacherName" placeholder="например, Смагулов Б.К." oninput="updateCalculations()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Предмет и Класс</label>
+                    <input type="text" id="subjectClass" placeholder="например, История Казахстана, 9 «Б»" oninput="updateCalculations()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Дата посещения урока</label>
+                    <input type="date" id="checkDate" onchange="updateCalculations()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Проверяющий (ФИО, Должность)</label>
+                    <input type="text" id="expertName" placeholder="например, Каримова А.М., Зам. директора" oninput="updateCalculations()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Grid: Checklist & Score Card -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 no-print">
+            
+            <!-- Checklist Section (4 Sections / 33 Exact Sub-criteria) -->
+            <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-slate-100 gap-2">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center">
+                            <i class="fa-solid fa-list-check text-emerald-600 mr-2"></i>Чек-лист: Качество современного урока (33 критерия)
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Шкала: Да (3 б.), Частично (2 б.), Не раскрыто (1 б.), Нет (0 б.)</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="setAllAnswers(3)" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-200 font-medium transition">
+                            Все «Да» (3)
+                        </button>
+                        <button onclick="resetChecklist()" class="text-xs text-slate-500 hover:text-rose-600 transition flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-right"></i> Сбросить
+                        </button>
+                    </div>
+                </div>
+
+                <div id="checklistItems" class="space-y-6">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+
+            <!-- Score & Level Summary Widget -->
+            <section class="lg:col-span-4 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sticky top-6">
+                    <h3 class="text-base font-semibold text-slate-800 mb-4 flex items-center">
+                        <i class="fa-solid fa-chart-pie text-emerald-600 mr-2"></i>Индекс качества урока
+                    </h3>
+
+                    <!-- Score Progress Bar -->
+                    <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                        <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Суммарный балл (Макс. 99)</span>
+                        <div class="flex justify-center items-baseline my-2">
+                            <span id="scoreValue" class="text-4xl font-extrabold text-emerald-700">0</span>
+                            <span class="text-slate-400 font-medium text-lg ml-1">/ 99 б.</span>
+                        </div>
+                        
+                        <div class="w-full bg-slate-200 rounded-full h-3 mb-2 overflow-hidden">
+                            <div id="scoreBar" class="bg-emerald-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+                            <span>0 б.</span>
+                            <span>50 б.</span>
+                            <span>99 б.</span>
+                        </div>
+                    </div>
+
+                    <!-- Computed Level Badge -->
+                    <div class="mb-6">
+                        <span class="text-xs font-medium text-slate-500 block mb-1">Уровень направления ВШК:</span>
+                        <div id="levelBadge" class="p-3 rounded-xl bg-slate-100 text-slate-600 font-bold text-center text-sm flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>Заполните чек-лист</span>
+                        </div>
+                    </div>
+
+                    <!-- Deficit Counter -->
+                    <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100">
+                        <div class="bg-amber-50 border border-amber-200/60 p-3 rounded-xl text-center">
+                            <span class="text-xl font-bold text-amber-700 block" id="partiallyCount">0</span>
+                            <span class="text-[11px] text-amber-800 font-medium">Частично / Не раскр.</span>
+                        </div>
+                        <div class="bg-rose-50 border border-rose-200/60 p-3 rounded-xl text-center">
+                            <span class="text-xl font-bold text-rose-700 block" id="noCount">0</span>
+                            <span class="text-[11px] text-rose-800 font-medium">Критические («Нет»)</span>
+                        </div>
+                    </div>
+
+                    <button onclick="scrollToResults()" class="mt-6 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                        <span>Сформировать продукт ВШК и справку</span>
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Output Section: Full Generated Product & Administrative Report -->
+        <section id="resultsSection" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            
+            <!-- Output Control Bar -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 mb-6 border-b border-slate-200 gap-4 no-print">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 flex items-center">
+                        <i class="fa-solid fa-box-archive text-emerald-600 mr-2"></i>Электронный продукт ВШК и справка замдиректора
+                    </h2>
+                    <p class="text-xs text-slate-500">Автоматически сгенерированный аналитический отчет и официальная справка по уроку</p>
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button onclick="window.print()" class="flex-1 sm:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium rounded-xl shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-print"></i> Печать / PDF
+                    </button>
+                    <button onclick="copyReportText()" class="flex-1 sm:flex-none px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl border border-slate-300 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-copy"></i> Копировать отчет
+                    </button>
+                </div>
+            </div>
+
+            <!-- Print Header -->
+            <div class="hidden print-only mb-6 border-b pb-4">
+                <div class="text-center font-bold text-lg text-slate-900 uppercase tracking-wide">ПРАКТИЧЕСКИЙ НАВИГАТОР ВШК: ОТ КОНТРОЛЯ К РАЗВИТИЮ</div>
+                <div class="text-center text-sm font-semibold text-emerald-800 mt-1">Направление: Качество современного урока</div>
+                <div class="mt-4 grid grid-cols-2 text-xs gap-2">
+                    <div><strong>Учитель:</strong> <span id="printTeacher">-</span></div>
+                    <div><strong>Предмет / Класс:</strong> <span id="printSubject">-</span></div>
+                    <div><strong>Дата проверки:</strong> <span id="printDate">-</span></div>
+                    <div><strong>Проверяющий:</strong> <span id="printExpert">-</span></div>
+                    <div><strong>Индекс ВШК:</strong> <span id="printScore">-</span> / 99 б. (<span id="printLevel">-</span>)</div>
+                </div>
+            </div>
+
+            <!-- Dynamic Decision Content Container -->
+            <div id="outputContent" class="space-y-8">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800 no-print">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>Электронный навигатор ВШК | Направление: «Качество современного урока»</p>
+            <p class="text-slate-500">Автоматическая генерация по 4 разделам и 33 точным критериям (макс. 99 баллов)</p>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center space-x-3 text-sm opacity-0 pointer-events-none transition-all duration-300 z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg">Сообщение</span>
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        // Exact 4 Sections with all 33 user-specified precise criteria
+        const checklistSections = [
+            {
+                sectionNumber: 1,
+                sectionTitle: 'Раздел 1: Планирование',
+                items: [
+                    {
+                        id: 'c1',
+                        title: 'Цели урока соответствуют целям обучения (ожидаемым результатам)',
+                        desc: 'Цели урока точно соответствуют ожидаемым результатам образовательной программы.',
+                        problem: 'Цели урока не полностью соответствуют ожидаемым результатам.',
+                        smartGoal: 'Обеспечить 100% соответствие целей урока ожидаемым результатам в течение месяца.',
+                        ifThen: 'ЕСЛИ цели не соответствуют ожиданиям, ТО провести экспертизу КТП на заседании ШМО.',
+                        swotS: 'Наличие календарно-тематического планирования',
+                        swotW: 'Формальная формулировка целей обучения',
+                        solOrg: 'Утвердить стандарт пошаговой структуры технологической карты урока.',
+                        solMeth: 'Провести практикум по формулировке SMART-целей урока.',
+                        solMoti: 'Включить культуру планирования в критерии стимулирующих надбавок.',
+                        metric: 'Доля уроков с четкими целями обучения',
+                        wasVal: '45%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c2',
+                        title: 'Цели конкретны и достижимы всеми обучающимися (воспитанниками)',
+                        desc: 'Цели реалистичны и достижимы для каждого ученика в классе.',
+                        problem: 'Цели завышены или абстрактны, не достижимы всеми учащимися.',
+                        smartGoal: 'Адаптировать цели урока под уровень подготовки каждого ученика.',
+                        ifThen: 'ЕСЛИ цели недостижимы для слабых учеников, ТО скорректировать разноуровневые задания.',
+                        swotS: 'Знание возможностей учеников',
+                        swotW: 'Усредненные требования ко всем учащимся',
+                        solOrg: 'Утвердить дифференцированные требования к уроку.',
+                        solMeth: 'Мастер-класс по таксономии Блума и целеполаганию.',
+                        solMoti: 'Поощрение за достижение целей слабыми учащимися.',
+                        metric: 'Доля учащихся, достигших целей урока',
+                        wasVal: '50%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c3',
+                        title: 'Урок проводится в назначенное время, регламент соблюдается',
+                        desc: 'Соблюдение расписания и тайм-менеджмента всех этапов урока.',
+                        problem: 'Нарушение регламента и тайм-менеджмента этапов урока.',
+                        smartGoal: 'Обеспечить жесткое соблюдение тайм-менеджмента на 100% уроков.',
+                        ifThen: 'ЕСЛИ регламент нарушается, ТО провести хронометраж и аудит распределения времени.',
+                        swotS: 'Пунктуальность педагога',
+                        swotW: 'Запаздывание при переходе между этапами',
+                        solOrg: 'Контроль звонкового расписания и этапов урока.',
+                        solMeth: 'Тренинг по управлению временем урока.',
+                        solMoti: 'Учет тайм-менеджмента в баллах мониторинга.',
+                        metric: 'Процент уроков с соблюдением тайм-менеджмента',
+                        wasVal: '60%',
+                        becameVal: '98%'
+                    },
+                    {
+                        id: 'c4',
+                        title: 'Участники имеют возможность активно участвовать (высказываться, задавать вопросы)',
+                        desc: 'Создание условий для активного диалога и вопросов учеников.',
+                        problem: 'Преобладание монолога учителя, пассивность учащихся.',
+                        smartGoal: 'Обеспечить активное участие и вопросы учеников на каждом уроке.',
+                        ifThen: 'ЕСЛИ учащиеся пассивны, ТО внедрить интерактивные диалоговые техники.',
+                        swotS: 'Доброжелательная атмосфера в классе',
+                        swotW: 'Отсутствие речевой инициативы у школьников',
+                        solOrg: 'Включить показатель диалога в карту наблюдения.',
+                        solMeth: 'Семинар «Методы вовлечения учащихся в диалог».',
+                        solMoti: 'Стимулирование активности учащихся на уроках.',
+                        metric: 'Доля уроков с активным участием школьников',
+                        wasVal: '40%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c5',
+                        title: 'Методы обучения и ресурсы соответствуют цели и ожидаемым результатам',
+                        desc: 'Адекватность методов и дидактических материалов задачам урока.',
+                        problem: 'Несоответствие методов и ресурсов поставленным целям.',
+                        smartGoal: 'Оптимизировать выбор методов и ресурсов под цели урока на 100%.',
+                        ifThen: 'ЕСЛИ методы не соответствуют цели, ТО обновить методический фонд материалов.',
+                        swotS: 'Наличие разнообразных пособий',
+                        swotW: 'Слабый выбор дидактических средств',
+                        solOrg: 'Инвентаризация дидактики в кабинетах.',
+                        solMeth: 'Практикум по подбору методов обучения.',
+                        solMoti: 'Создание банка лучших цифровых и бумажных ресурсов.',
+                        metric: 'Процент уроков с оптимальным подбором методов',
+                        wasVal: '50%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c6',
+                        title: 'Методы обучения и ресурсы соответствуют возрастным особенностям',
+                        desc: 'Учет психолого-возрастных особенностей при выборе методов.',
+                        problem: 'Игнорирование возрастных особенностей в методике.',
+                        smartGoal: 'Адаптировать методы под возрастные особенности учащихся.',
+                        ifThen: 'ЕСЛИ методы не подходят возрасту, ТО пройти курсы возрастной педагогики.',
+                        swotS: 'Знание психологии детей',
+                        swotW: 'Применение однотипных сложных форм',
+                        solOrg: 'Методическая поддержка со стороны психолога.',
+                        solMeth: 'Мастер-класс по возрастной психологии и методам.',
+                        solMoti: 'Оценка вовлеченности с учетом возраста.',
+                        metric: 'Доля уроков, адаптированных по возрасту',
+                        wasVal: '55%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c7',
+                        title: 'Методы обучения и ресурсы соответствуют образовательным потребностям',
+                        desc: 'Учет индивидуальных потребностей и уровня подготовки.',
+                        problem: 'Отсутствие учета образовательных потребностей разных групп.',
+                        smartGoal: 'Внедрить учет потребностей учащихся на всех уроках.',
+                        ifThen: 'ЕСЛИ потребности не учитываются, ТО составить профили обучаемости.',
+                        swotS: 'Желание педагога помочь ученикам',
+                        swotW: 'Работа по единому шаблону без учета потребностей',
+                        solOrg: 'Проверка планов на учет потребностей учащихся.',
+                        solMeth: 'Семинар по инклюзивному и дифференцированному подходу.',
+                        solMoti: 'Премирование за высокие результаты инклюзии.',
+                        metric: 'Доля уроков с учетом образовательных потребностей',
+                        wasVal: '45%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c8',
+                        title: 'Методы, инструменты оценивания (задания) соответствуют цели и ожидаемым результатам',
+                        desc: 'Соответствие средств оценивания планируемым результатам.',
+                        problem: 'Инструменты оценивания не проверяют заявленные цели.',
+                        smartGoal: 'Синхронизировать инструменты оценивания с целями обучения.',
+                        ifThen: 'ЕСЛИ оценивание не соответствует целям, ТО переработать задания для СОР/СОЧ.',
+                        swotS: 'Наличие критериальной базы',
+                        swotW: 'Разрыв между целями и проверочными заданиями',
+                        solOrg: 'Экспертиза контрольных материалов.',
+                        solMeth: 'Практикум по разработке валидных заданий.',
+                        solMoti: 'Поощрение за точное критериальное оценивание.',
+                        metric: 'Доля валидных заданий оценивания',
+                        wasVal: '50%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c9',
+                        title: 'Методы, инструменты оценивания (задания) соответствуют возрастным особенностям',
+                        desc: 'Формы контроля понятны и адекватны возрасту детей.',
+                        problem: 'Сложные или неподходящие по возрасту формы оценивания.',
+                        smartGoal: 'Адаптировать инструменты оценивания под возраст учеников.',
+                        ifThen: 'ЕСЛИ оценивание не по возрасту, ТО упростить формулировки и подачу.',
+                        swotS: 'Опыт работы с возрастными группами',
+                        swotW: 'Сложные неадаптированные инструкции к заданиям',
+                        solOrg: 'Утверждение возрастных стандартов оценивания.',
+                        solMeth: 'Консультация по разработке доступных дескрипторов.',
+                        solMoti: 'Обмен опытом создания возрастных тестов.',
+                        metric: 'Доля адекватных возрасту заданий оценивания',
+                        wasVal: '55%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c10',
+                        title: 'Планируется вовлечение обучающихся (воспитанников) в процесс самооценивания на всех этапах урока',
+                        desc: 'Интеграция самопроверки и самооценки учениками своей работы.',
+                        problem: 'Отсутствие самооценивания, пассивная роль ученика в оценке.',
+                        smartGoal: 'Внедрить инструменты самооценивания на всех этапах урока.',
+                        ifThen: 'ЕСЛИ самооценивание отсутствует, ТО внедрить листы самооценки и рефлексии.',
+                        swotS: 'Понимание важности самооценки',
+                        swotW: 'Монополия учительского оценивания',
+                        solOrg: 'Включение самооценки в требования к конспекту урока.',
+                        solMeth: 'Мастер-класс «Техники самооценивания учащихся».',
+                        solMoti: 'Поощрение учителей за развитие навыков самоанализа.',
+                        metric: 'Доля уроков с элементами самооценивания',
+                        wasVal: '40%',
+                        becameVal: '95%'
+                    }
+                ]
+            },
+            {
+                sectionNumber: 2,
+                sectionTitle: 'Раздел 2: Преподавание (организация, проведение)',
+                items: [
+                    {
+                        id: 'c11',
+                        title: 'Предоставление материала урока с учетом развития функциональной грамотности',
+                        desc: 'Обучение строится на связи теории с реальной жизнью.',
+                        problem: 'Преобладание абстрактной теории без связи с практикой и функциональной грамотностью.',
+                        smartGoal: 'Включать задания на функциональную грамотность на 100% уроков.',
+                        ifThen: 'ЕСЛИ теория от оторвана от жизни, ТО использовать кейс-метод и PISA-задачи.',
+                        swotS: 'Знание предметного содержания',
+                        swotW: 'Дефицит практико-ориентированных задач',
+                        solOrg: 'Мониторинг наличия контекстных задач.',
+                        solMeth: 'Практикум по решению задач функциональной грамотности.',
+                        solMoti: 'Конкурс авторских практических задач.',
+                        metric: 'Доля уроков с развитием функциональной грамотности',
+                        wasVal: '35%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c12',
+                        title: 'Отражается последовательное и взаимосвязанное владение терминами и понятиями',
+                        desc: 'Системное введение, объяснение и повторение терминологии.',
+                        problem: 'Хаотичное использование понятий без системной связи.',
+                        smartGoal: 'Обеспечить системное владение понятийным аппаратом на уроках.',
+                        ifThen: 'ЕСЛИ термины используются хаотично, ТО составить глоссарий темы.',
+                        swotS: 'Академическая грамотность педагога',
+                        swotW: 'Отсутствие словарей и понятийных карт',
+                        solOrg: 'Проверка наличия глоссариев по предметам.',
+                        solMeth: 'Семинар по формированию терминологической грамотности.',
+                        solMoti: 'Интеллектуальные баттлы по терминам.',
+                        metric: 'Доля уроков с системным освоением терминов',
+                        wasVal: '50%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c13',
+                        title: 'Обучающиеся вовлекаются к определению способов практического применения материала',
+                        desc: 'Школьники сами предлагают примеры применения знаний.',
+                        problem: 'Ученики не понимают практического смысла изучаемого материала.',
+                        smartGoal: 'Вовлекать учащихся в поиск практического применения на каждом уроке.',
+                        ifThen: 'ЕСЛИ смысл не ясен учащимся, ТО начинать урок с проблемного жизненного вопроса.',
+                        swotS: 'Интерес детей к реальным кейсам',
+                        swotW: 'Пассивность учащихся при обсуждении пользы темы',
+                        solOrg: 'Включение проблемных вопросов в технологические карты.',
+                        solMeth: 'Обучение методам проблемного обучения.',
+                        solMoti: 'Поощрение лучших предложений учеников.',
+                        metric: 'Доля уроков с поиском практического применения',
+                        wasVal: '40%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c14',
+                        title: 'Используются ЦОР с учетом индивидуальных потребностей',
+                        desc: 'Применение цифровых платформ и ресурсов дифференцированно.',
+                        problem: 'Формальное или избыточное использование ЦОР без адаптации.',
+                        smartGoal: 'Обеспечить адресное применение ЦОР с учетом потребностей учеников.',
+                        ifThen: 'ЕСЛИ ЦОР применяются формально, ТО пройти обучение по цифровым инструментам.',
+                        swotS: 'Хорошая материальная база и интернет',
+                        swotW: 'Отсутствие дифференциации цифровых заданий',
+                        solOrg: 'График доступа к компьютерным классам.',
+                        solMeth: 'Мастер-класс «Индивидуализация через ЦОР».',
+                        solMoti: 'Статус «Цифровой учитель школы».',
+                        metric: 'Доля уроков с адресным применением ЦОР',
+                        wasVal: '55%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c15',
+                        title: 'Применение методов обучения, заданий, ресурсов, способов дифференциации с учетом потребностей',
+                        desc: 'Разноуровневый подход к обучению в зависимости от потребностей.',
+                        problem: 'Единые задания для всех без учета уровня подготовки.',
+                        smartGoal: 'Внедрить дифференциацию заданий и ресурсов на 100% уроков.',
+                        ifThen: 'ЕСЛИ дифференциация отсутствует, ТО разработать разноуровневые карточки.',
+                        swotS: 'Понимание различий в классе',
+                        swotW: 'Сложность одновременной работы с разными уровнями',
+                        solOrg: 'Проверка наличия разноуровневых раздаточных материалов.',
+                        solMeth: 'Практикум по проектированию дифференцированных заданий.',
+                        solMoti: 'Учет успехов слабых учеников при оценке учителя.',
+                        metric: 'Доля уроков с дифференцированными заданиями',
+                        wasVal: '30%',
+                        becameVal: '85%'
+                    },
+                    {
+                        id: 'c16',
+                        title: 'Предоставляются дополнительные инструкции для обучающихся с низкими результатами обучения',
+                        desc: 'Педагог дает скаффолдинг и поддержку отстающим ученикам.',
+                        problem: 'Отсутствие дополнительной помощи и инструкций для слабых детей.',
+                        smartGoal: 'Обеспечить учащихся с низкими результатами пошаговыми инструкциями.',
+                        ifThen: 'ЕСЛИ инструкции не даются, ТО разработать памятки и карточки-подсказки.',
+                        swotS: 'Желание педагога подтянуть отстающих',
+                        swotW: 'Дефицит готовых вспомогательных материалов',
+                        solOrg: 'Создание банка карточек-помощниц по предметам.',
+                        solMeth: 'Семинар по технологиям сканфолдинга и поддержки.',
+                        solMoti: 'Награждение за динамику роста слабых учеников.',
+                        metric: 'Доля уроков с дополнительными инструкциями',
+                        wasVal: '35%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c17',
+                        title: 'Использует приемы активизации познавательного интереса обучающихся к теме на всех этапах урока',
+                        desc: 'Смена деятельности, эмоциональность, контакт, обращение по имени.',
+                        problem: 'Однообразный монотонный темп урока, отсутствие эмоционального контакта.',
+                        smartGoal: 'Применять приемы активизации познавательного интереса на каждом уроке.',
+                        ifThen: 'ЕСЛИ темп монотонен, ТО внедрить динамические паузы и интригующие факты.',
+                        swotS: 'Харизма и энергия педагогов',
+                        swotW: 'Утомляемость школьников во второй половине урока',
+                        solOrg: 'Контроль разнообразия видов деятельности.',
+                        solMeth: 'Мастер-класс по геймификации и вовлечению.',
+                        solMoti: 'Призы за атмосферу вовлеченности на уроке.',
+                        metric: 'Доля уроков с приемами активизации интереса',
+                        wasVal: '45%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c18',
+                        title: 'Соблюдается структура урока, при этом педагог гибко реагирует на необходимость изменений в соответствии с потребностями обучающихся',
+                        desc: 'Выдерживание структуры с гибкой коррекцией под ситуацию в классе.',
+                        problem: 'Жесткое следование плану в ущерб пониманию детей или срыв структуры.',
+                        smartGoal: 'Обеспечить баланс структуры урока и гибкости реагирования.',
+                        ifThen: 'ЕСЛИ структура нарушается или слишком жесткая, ТО провести анализ тайминга.',
+                        swotS: 'Опыт планирования уроков',
+                        swotW: 'Трудности импровизации при непонимании темы',
+                        solOrg: 'Методический разбор типичных ошибок планирования.',
+                        solMeth: 'Тренинг педагогической гибкости и адаптивности.',
+                        solMoti: 'Обмен опытом успешных импровизаций.',
+                        metric: 'Доля уроков с гибким соблюдением структуры',
+                        wasVal: '50%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c19',
+                        title: 'Рационально распределяется время (выдерживается тайм-менеджмент)',
+                        desc: 'Каждый этап урока имеет четкий лимит времени, успеваемость по плану.',
+                        problem: 'Затягивание организационного момента или нехватка времени на рефлексию.',
+                        smartGoal: 'Соблюдать тайм-менеджмент всех этапов на 100% уроков.',
+                        ifThen: 'ЕСЛИ этапы затягиваются, ТО использовать таймер и жесткий контроль времени.',
+                        swotS: 'Понимание структуры урока',
+                        swotW: 'Неумение рассчитать время на сложные задания',
+                        solOrg: 'Установка таймеров на экранах в классах.',
+                        solMeth: 'Практикум по распределению времени урока.',
+                        solMoti: 'Контроль соблюдения тайминга в ВШК.',
+                        metric: 'Процент уроков с точным тайм-менеджментом',
+                        wasVal: '55%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c20',
+                        title: 'Обеспечивается вовлеченность всех обучающихся (воспитанников) в урок',
+                        desc: 'Нет пассивных наблюдателей, каждый задействован в работу.',
+                        problem: 'Наличие пассивных учеников, отсиживающихся на задних партах.',
+                        smartGoal: 'Достичь 100% вовлеченности учащихся на каждом уроке.',
+                        ifThen: 'ЕСЛИ есть пассивные ученики, ТО применять фронтальные и парные методы.',
+                        swotS: 'Контроль внимания со стороны учителя',
+                        swotW: 'Отсутствие тотального охвата вниманием всех детей',
+                        solOrg: 'Мониторинг охвата учащихся на уроке.',
+                        solMeth: 'Семинар по активным методам вовлечения каждого.',
+                        solMoti: 'Стимулирование учителей за стопроцентную вовлеченность.',
+                        metric: 'Доля вовлеченных в работу учащихся на уроке',
+                        wasVal: '45%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c21',
+                        title: 'Соблюдается баланс грамотной речи (альтернативной коммуникации) педагога и обучающихся',
+                        desc: 'Культура речи учителя, достаточный объем речевой активности детей.',
+                        problem: 'Доминирование монолога учителя, бедная речь учащихся.',
+                        smartGoal: 'Обеспечить речевой баланс: не менее 50% времени говорят учащиеся.',
+                        ifThen: 'ЕСЛИ говорит только учитель, ТО вести хронометраж речевой активности.',
+                        swotS: 'Грамотная речь педагогов',
+                        swotW: 'Низкая речевая активность школьников',
+                        solOrg: 'Фиксация речевого баланса в карте урока.',
+                        solMeth: 'Тренинг диалогового обучения и дискуссий.',
+                        solMoti: 'Трансляция опыта учителей-словесников.',
+                        metric: 'Доля уроков с соблюдением речевого баланса',
+                        wasVal: '40%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c22',
+                        title: 'Соблюдается баланс (рациональность) в применении разных форм взаимодействия (распределяются роли при групповой работе) с учетом индивидуальных особенностей',
+                        desc: 'Осмысленная парная и групповая работа с четкими ролями участников.',
+                        problem: 'Формальная групповая работа без ролей, где работает один лидер.',
+                        smartGoal: 'Организовать эффективную работу в группах с распределением ролей.',
+                        ifThen: 'ЕСЛИ групповая работа формальна, ТО ввести обязательные роли (спикер, тайм-кипер).',
+                        swotS: 'Дружный коллектив учащихся',
+                        swotW: 'Неумение работать в команде распределенно',
+                        solOrg: 'Утверждение памяток групповой работы.',
+                        solMeth: 'Мастер-класс «Организация ролевой групповой работы».',
+                        solMoti: 'Конкурс на лучшую командную работу класса.',
+                        metric: 'Доля уроков с ролевым распределением в группах',
+                        wasVal: '35%',
+                        becameVal: '85%'
+                    },
+                    {
+                        id: 'c23',
+                        title: 'Обучающиеся (воспитанники) активно участвуют в обсуждениях',
+                        desc: 'Живые дискуссии, аргументация мнений школьниками.',
+                        problem: 'Односложные ответы с мест («да», «нет»), отсутствие аргументации.',
+                        smartGoal: 'Стимулировать развернутые аргументированные ответы учащихся.',
+                        ifThen: 'ЕСЛИ ответы односложные, ТО требовать доказательств («почему ты так думаешь?»).',
+                        swotS: 'Открытость к общению',
+                        swotW: 'Страх сделать ошибку при высказывании',
+                        solOrg: 'Создание безопасной психологической среды.',
+                        solMeth: 'Обучение технике аргументации и дебатов.',
+                        solMoti: 'Поощрение за развернутые аргументы.',
+                        metric: 'Доля уроков с активными обсуждениями',
+                        wasVal: '40%',
+                        becameVal: '90%'
+                    }
+                ]
+            },
+            {
+                sectionNumber: 3,
+                sectionTitle: 'Раздел 3: Реализация ценностей единой воспитательной программы "Адал азамат"',
+                items: [
+                    {
+                        id: 'c24',
+                        title: 'В содержании урока отражены отдельные элементы ценностей единой воспитательной программы "Адал азамат"',
+                        desc: 'Интеграция ценностей честности, трудолюбия, патриотизма в тему урока.',
+                        problem: 'Отсутствие связи предметного материала с ценностями воспитания.',
+                        smartGoal: 'Интегрировать элементы ценностей «Адал азамат» во все уроки.',
+                        ifThen: 'ЕСЛИ ценности не отражены, ТО разработать воспитательные аспекты к темам.',
+                        swotS: 'Готовность воспитательной службы школы',
+                        swotW: 'Изолированность предметного обучения от воспитания',
+                        solOrg: 'Включение ценностей в паспорта предметов.',
+                        solMeth: 'Семинар «Ценностно-ориентированное обучение».',
+                        solMoti: 'Награждение за лучшие уроки с воспитательным компонентом.',
+                        metric: 'Доля уроков с интеграцией ценностей «Адал азамат»',
+                        wasVal: '50%',
+                        becameVal: '100%'
+                    },
+                    {
+                        id: 'c25',
+                        title: 'Обучающиеся (воспитанники) осознают практическую и социальную значимость своего обучения, связывая знания с развитием общества, экологии и страны',
+                        desc: 'Понимание того, как знания пригодятся в жизни общества и страны.',
+                        problem: 'Учащиеся не видят связи между школьными знаниями и реальной жизнью.',
+                        smartGoal: 'Формировать понимание социальной значимости знаний на каждом уроке.',
+                        ifThen: 'ЕСЛИ значимость не осознается, ТО приводить примеры пользы для общества.',
+                        swotS: 'Актуальность тем предметов',
+                        swotW: 'Абстрактность материала для понимания детьми',
+                        solOrg: 'Включение социальных кейсов в программу.',
+                        solMeth: 'Мастер-класс по социальному проектированию на уроке.',
+                        solMoti: 'Презентация ученических проектов общественной пользы.',
+                        metric: 'Доля уроков с обсуждением социальной значимости',
+                        wasVal: '45%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c26',
+                        title: 'Обучающиеся (воспитанники) демонстрируют осознанную дисциплину, не опаздывают, соблюдают дресс-код, уважают личные границы друг друга',
+                        desc: 'Культура поведения, соблюдение правил школы и дисциплины.',
+                        problem: 'Нарушения дисциплины, опоздания, несоблюдение дресс-кода.',
+                        smartGoal: 'Достичь 100% соблюдения дисциплины, дресс-кода и личных границ.',
+                        ifThen: 'ЕСЛИ дисциплина нарушается, ТО провести беседу с учениками и родителями.',
+                        swotS: 'Поддержка со стороны родителей',
+                        swotW: 'Эпизодические нарушения школьного регламента',
+                        solOrg: 'Ужесточение контроля за посещением и внешним видом.',
+                        solMeth: 'Классные часы по культуре поведения и дисциплине.',
+                        solMoti: 'Рейтинг дисциплины классов с поощрением.',
+                        metric: 'Уровень дисциплины и соблюдения дресс-кода',
+                        wasVal: '70%',
+                        becameVal: '98%'
+                    },
+                    {
+                        id: 'c27',
+                        title: 'Соблюдается принцип "Еңбегі адал" с обеспечением академической честности при выполнении заданий',
+                        desc: 'Честное выполнение заданий без списывания и плагиата.',
+                        problem: 'Списывание, плагиат, нечестное выполнение самостоятельных работ.',
+                        smartGoal: 'Обеспечить абсолютную академическую честность на 100% уроков.',
+                        ifThen: 'ЕСЛИ зафиксировано списывание, ТО аннулировать работу и провести беседу о честном труде.',
+                        swotS: 'Понимание ценности честного труда',
+                        swotW: 'Склонность к списыванию у части учащихся',
+                        solOrg: 'Утверждение кодекса академической честности школы.',
+                        solMeth: 'Разработка уникальных вариативных заданий для исключения списывания.',
+                        solMoti: 'Поощрение честно выполненных самостоятельных работ.',
+                        metric: 'Доля уроков с соблюдением академической честности',
+                        wasVal: '60%',
+                        becameVal: '100%'
+                    },
+                    {
+                        id: 'c28',
+                        title: 'Обучающиеся (воспитанники) демонстрируют глубокое уважение к государственным символам, языку и национальным традициям, с интересом погружаясь в родную культуру',
+                        desc: 'Патриотическое воспитание, уважение к культуре и традициям народа.',
+                        problem: 'Формальное отношение к государственной символике и традициям.',
+                        smartGoal: 'Формировать глубокое уважение к символам и традициям на уроках.',
+                        ifThen: 'ЕСЛИ отношение формальное, ТО проводить тематические минуты уважения.',
+                        swotS: 'Сильные традиции патриотического воспитания',
+                        swotW: 'Недостаточная эмоциональная вовлеченность',
+                        solOrg: 'Оформление кабинетов символикой государства.',
+                        solMeth: 'Интеграция истории традиций в предметный материал.',
+                        solMoti: 'Конкурсы патриотической песни и традиций.',
+                        metric: 'Доля уроков с воспитанием уважения к традициям',
+                        wasVal: '75%',
+                        becameVal: '100%'
+                    }
+                ]
+            },
+            {
+                sectionNumber: 4,
+                sectionTitle: 'Раздел 4: Оценивание и рефлексия',
+                items: [
+                    {
+                        id: 'c29',
+                        title: 'Методы, инструменты оценивания способствуют достижению целей и ожидаемых результатов урока всеми обучающимися',
+                        desc: 'Оценивание работает на помощь ученику в достижении результатов.',
+                        problem: 'Оценивание носит сугубо карательный или отметкоцентричный характер.',
+                        smartGoal: 'Переориентировать оценивание на помощь в достижении целей обучения.',
+                        ifThen: 'ЕСЛИ оценивание только ради отметки, ТО внедрить формирующее оценивание.',
+                        swotS: 'Наличие журналов и электронных платформ',
+                        swotW: 'Отсутствие развивающей составляющей в отметках',
+                        solOrg: 'Мониторинг использования формирующего оценивания.',
+                        solMeth: 'Практикум по формирующему оцениванию.',
+                        solMoti: 'Поощрение учителей за развитие учащихся через оценку.',
+                        metric: 'Доля развивающего оценивания на уроках',
+                        wasVal: '45%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c30',
+                        title: 'Предоставляются своевременная обратная связь, рекомендации для развития навыков (с использованием инструментов оценивания при необходимости)',
+                        desc: 'Ученик получает конструктивный комментарий по улучшению работы.',
+                        problem: 'Отсутствие обратной связи («просто отметка без комментариев»).',
+                        smartGoal: 'Обеспечить адресную конструктивную обратную связь на каждом уроке.',
+                        ifThen: 'ЕСЛИ обратной связи нет, ТО внедрить правило «комментарий к каждой работе».',
+                        swotS: 'Желание учеников знать свои ошибки',
+                        swotW: 'Большая нагрузка мешает давать развернутые комментарии',
+                        solOrg: 'Оптимизация объема письменных работ для качественной обратной связи.',
+                        solMeth: 'Семинар «Техники эффективной обратной связи».',
+                        solMoti: 'Учет качества обратной связи при аттестации.',
+                        metric: 'Доля уроков со своевременной обратной связью',
+                        wasVal: '40%',
+                        becameVal: '90%'
+                    },
+                    {
+                        id: 'c31',
+                        title: 'Предоставляет возможности для самооценивания на всех этапах урока',
+                        desc: 'Системное включение рефлексии и самооценки ученика.',
+                        problem: 'Самооценивание проводится редко или формально.',
+                        smartGoal: 'Интегрировать самооценивание во все этапы урока.',
+                        ifThen: 'ЕСЛИ самооценки нет, ТО использовать чек-листы самопроверки.',
+                        swotS: 'Понимание пользы самооценки',
+                        swotW: 'Непривычность для учащихся оценивать себя честно',
+                        solOrg: 'Требования к конспекту урока по самооценке.',
+                        solMeth: 'Мастер-класс по внедрению самооценивания.',
+                        solMoti: 'Конкурс лучших инструментов самопроверки.',
+                        metric: 'Доля уроков с регулярным самооцениванием',
+                        wasVal: '40%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c32',
+                        title: 'Рефлексия соответствует целям и ожидаемым результатам урока, планируется развитие навыков',
+                        desc: 'Анализ достижения целей в конце урока с выходом на развитие.',
+                        problem: 'Формальная рефлексия («смайлики без анализа целей и навыков»).',
+                        smartGoal: 'Проводить результативную рефлексию по достижению целей на 100% уроков.',
+                        ifThen: 'ЕСЛИ рефлексия формальна, ТО использовать банк рефлексивных вопросов по целям.',
+                        swotS: 'Понимание важности итогов урока',
+                        swotW: 'Однотипные шаблоны рефлексии',
+                        solOrg: 'Утверждение банка рефлексивных техник школы.',
+                        solMeth: 'Практикум «Рефлексия как инструмент анализа достижения целей».',
+                        solMoti: 'Трансляция лучших практик рефлексии.',
+                        metric: 'Доля уроков с рефлексией по целям',
+                        wasVal: '45%',
+                        becameVal: '95%'
+                    },
+                    {
+                        id: 'c33',
+                        title: 'Проводится оценивание урока на основе достижения обучающимися целей (ожидаемых результатов)',
+                        desc: 'Итоговый срез понимания, достигнута ли цель обучения классом.',
+                        problem: 'Отсутствие итогового вывода о степени достижения целей урока.',
+                        smartGoal: 'Фиксировать достижение целей урока каждым учеником.',
+                        ifThen: 'ЕСЛИ итоги не подведены, ТО ввести обязательный этап проверки достижения целей.',
+                        swotS: 'Стремление завершить урок результативно',
+                        swotW: 'Нехватка времени на подведение итогов',
+                        solOrg: 'Контроль наличия итоговой рефлексии целей.',
+                        solMeth: 'Обучение методам экспресс-диагностики результатов.',
+                        solMoti: 'Поощрение учителей за высокие показатели достижения целей.',
+                        metric: 'Доля уроков с итоговой диагностикой целей',
+                        wasVal: '40%',
+                        becameVal: '90%'
+                    }
+                ]
+            }
+        ];
+
+        let lessonCriteria = [];
+        checklistSections.forEach(sec => {
+            sec.items.forEach(item => {
+                lessonCriteria.push({ ...item, section: sec.sectionTitle });
+            });
+        });
+
+        const userAnswers = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('checkDate').valueAsDate = new Date();
+            renderChecklist();
+            updateCalculations();
+        });
+
+        function renderChecklist() {
+            const container = document.getElementById('checklistItems');
+            container.innerHTML = checklistSections.map(sec => `
+                <div class="space-y-3">
+                    <div class="bg-emerald-800 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-between">
+                        <span>${sec.sectionTitle}</span>
+                        <span class="text-[10px] bg-emerald-900 px-2 py-0.5 rounded text-emerald-200">Критериев: ${sec.items.length}</span>
+                    </div>
+                    <div class="space-y-3 pl-1 sm:pl-2">
+                        ${sec.items.map((item, idx) => `
+                            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white transition-all">
+                                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                                    <div class="space-y-1 max-w-2xl">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-emerald-700">Критерий #${lessonCriteria.findIndex(c => c.id === item.id) + 1}</span>
+                                        </div>
+                                        <h4 class="text-sm font-bold text-slate-800">${item.title}</h4>
+                                        <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 sm:flex items-center gap-1.5 shrink-0 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm">
+                                        <button type="button" onclick="setAnswer('${item.id}', 3)" id="btn_${item.id}_3" 
+                                            class="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition border border-transparent">
+                                            Да (3)
+                                        </button>
+                                        <button type="button" onclick="setAnswer('${item.id}', 2)" id="btn_${item.id}_2" 
+                                            class="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition border border-transparent">
+                                            Частично (2)
+                                        </button>
+                                        <button type="button" onclick="setAnswer('${item.id}', 1)" id="btn_${item.id}_1" 
+                                            class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition border border-transparent">
+                                            Не раскр. (1)
+                                        </button>
+                                        <button type="button" onclick="setAnswer('${item.id}', 0)" id="btn_${item.id}_0" 
+                                            class="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition border border-transparent">
+                                            Нет (0)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setAnswer(id, val) {
+            userAnswers[id] = val;
+            ['3', '2', '1', '0'].forEach(suffix => {
+                const btn = document.getElementById(`btn_${id}_${suffix}`);
+                if (btn) btn.className = "px-2 py-1.5 rounded-lg text-xs font-semibold transition border border-transparent text-slate-600 hover:bg-slate-100";
+            });
+
+            const activeBtn = document.getElementById(`btn_${id}_${val}`);
+            if (activeBtn) {
+                if (val === 3) {
+                    activeBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white shadow-sm border-emerald-600";
+                } else if (val === 2) {
+                    activeBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-sm border-blue-600";
+                } else if (val === 1) {
+                    activeBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 text-white shadow-sm border-amber-500";
+                } else {
+                    activeBtn.className = "px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 text-white shadow-sm border-rose-600";
+                }
+            }
+
+            updateCalculations();
+        }
+
+        function setAllAnswers(val) {
+            lessonCriteria.forEach(item => setAnswer(item.id, val));
+            showToast('Все 33 критерия установлены на «Да (3)»');
+        }
+
+        function resetChecklist() {
+            Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
+            renderChecklist();
+            updateCalculations();
+            showToast('Чек-лист сброшен');
+        }
+
+        function updateCalculations() {
+            let total = 0;
+            let answeredCount = 0;
+            let partCount = 0;
+            let noCount = 0;
+
+            lessonCriteria.forEach(item => {
+                if (userAnswers.hasOwnProperty(item.id)) {
+                    const val = userAnswers[item.id];
+                    total += val;
+                    answeredCount++;
+                    if (val === 2 || val === 1) partCount++;
+                    if (val === 0) noCount++;
+                }
+            });
+
+            document.getElementById('scoreValue').innerText = total;
+            document.getElementById('partiallyCount').innerText = partCount;
+            document.getElementById('noCount').innerText = noCount;
+
+            const percentage = (total / 99.0) * 100;
+            const bar = document.getElementById('scoreBar');
+            bar.style.width = `${percentage}%`;
+
+            const badge = document.getElementById('levelBadge');
+
+            if (answeredCount === 0) {
+                badge.className = "p-3 rounded-xl bg-slate-100 text-slate-600 font-bold text-center text-sm flex items-center justify-center gap-2";
+                badge.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>Заполните чек-лист</span>`;
+                bar.className = "bg-slate-400 h-3 rounded-full transition-all duration-500";
+            } else if (total >= 85) {
+                badge.className = "p-3 rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-center text-sm flex items-center justify-center gap-2";
+                badge.innerHTML = `<i class="fa-solid fa-award text-emerald-600 text-lg"></i><span>ВЫСОКИЙ УРОВЕНЬ (85-99 б.)</span>`;
+                bar.className = "bg-emerald-500 h-3 rounded-full transition-all duration-500";
+            } else if (total >= 55) {
+                badge.className = "p-3 rounded-xl bg-amber-100 text-amber-800 border border-amber-300 font-bold text-center text-sm flex items-center justify-center gap-2";
+                badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i><span>ДОСТАТОЧНЫЙ УРОВЕНЬ (55-84 б.)</span>`;
+                bar.className = "bg-amber-500 h-3 rounded-full transition-all duration-500";
+            } else {
+                badge.className = "p-3 rounded-xl bg-rose-100 text-rose-800 border border-rose-300 font-bold text-center text-sm flex items-center justify-center gap-2";
+                badge.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-lg"></i><span>КРИТИЧЕСКИЙ УРОВЕНЬ (< 55 б.)</span>`;
+                bar.className = "bg-rose-500 h-3 rounded-full transition-all duration-500";
+            }
+
+            renderFullOutputProduct();
+        }
+
+        function renderFullOutputProduct() {
+            const container = document.getElementById('outputContent');
+            const teacher = document.getElementById('teacherName').value || 'Педагог';
+            const subject = document.getElementById('subjectClass').value || 'Учебный предмет / класс';
+            const expert = document.getElementById('expertName').value || 'Заместитель директора';
+            const dateStr = document.getElementById('checkDate').value || 'дата не указана';
+
+            if (Object.keys(userAnswers).length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-clipboard-list text-4xl mb-3 block text-slate-300"></i>
+                        <p class="text-sm font-medium">Отметьте пункты в чек-листе выше по всем 4 разделам и 33 точным критериям, чтобы автоматически сформировать управленческий продукт ВШК и официальную справку.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const strengths = lessonCriteria.filter(c => userAnswers[c.id] === 3);
+            const deficits = lessonCriteria.filter(c => userAnswers[c.id] === 0 || userAnswers[c.id] === 1 || userAnswers[c.id] === 2);
+            const totalScore = document.getElementById('scoreValue').innerText;
+
+            let html = `
+                <!-- Product Header Banner -->
+                <div class="p-4 bg-emerald-900 text-white rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-200">Автоматический управленческий отчет ВШК</span>
+                        <h3 class="text-base font-bold">Направление: Качество современного урока</h3>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-800 rounded-lg text-xs font-semibold text-emerald-100">33 критерия / 99 баллов макс.</span>
+                </div>
+
+                <!-- 0. Automated Administrative Report (Справка по уроку) -->
+                <div class="p-6 bg-white rounded-xl border-2 border-emerald-800/20 shadow-sm space-y-4">
+                    <div class="border-b pb-3 flex justify-between items-center">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-2">
+                            <i class="fa-solid fa-file-lines text-emerald-600 text-base"></i>Автоматическая справка по итогам посещения урока
+                        </h3>
+                        <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-800 rounded-lg">Официальный документ ВШК</span>
+                    </div>
+                    <div class="space-y-3 text-xs text-slate-700 leading-relaxed">
+                        <p>В соответствии с планом внутришкольного контроля и графиком посещения уроков <strong>«${dateStr}»</strong> заместителем директора <strong>${expert}</strong> был посещен урок по предмету <strong>${subject}</strong>, проведенный учителем <strong>${teacher}</strong>.</p>
+                        
+                        <p><strong>Цель посещения:</strong> Контроль качества современного урока, оценка соблюдения требований стандартов образования, интеграции ценностей программы «Адал азамат» и эффективности применяемых методов обучения.</p>
+                        
+                        <p><strong>Результаты экспертной оценки:</strong> В ходе урока осуществлена проверка по 33 детальным критериям в 4 разделах. Суммарный индекс качества составил <strong>${totalScore} из 99 баллов</strong>.</p>
+                        
+                        ${strengths.length > 0 ? `
+                            <p><strong>Положительные аспекты урока:</strong> Педагог демонстрирует уверенное владение материалом. В ходе урока отмечены следующие сильные стороны: ${strengths.slice(0, 4).map(s => `«${s.title}»`).join(', ')} и др.</p>
+                        ` : ''}
+                        
+                        ${deficits.length > 0 ? `
+                            <p><strong>Выявленные затруднения и дефициты:</strong> В ходе наблюдения зафиксированы зоны роста, требующие методического внимания: ${deficits.slice(0, 3).map(d => `«${d.title}»`).join(', ')}.</p>
+                        ` : `
+                            <p><strong>Выводы:</strong> Урок проведен на высоком методическом уровне, критических дефицитов не выявлено.</p>
+                        `}
+
+                        <div class="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <span class="font-bold text-slate-800 block mb-1">Рекомендации учителю:</span>
+                                <ul class="list-disc list-inside space-y-1 text-slate-600">
+                                    <li>Продолжить практику эффективных элементов урока.</li>
+                                    <li>Устранить выявленные методические дефициты в течение 30 дней.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-800 block mb-1">Подписи сторон:</span>
+                                <div class="mt-2 space-y-1 text-slate-600">
+                                    <p>Проверяющий: ____________ / ${expert}</p>
+                                    <p>Учитель ознакомлен: ____________ / ${teacher}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. Problem Identification Block -->
+                <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-600"></i>1. Выявляем проблему через чек-лист
+                    </h3>
+                    ${deficits.length > 0 ? `
+                        <p class="text-xs text-slate-700">В ходе экспертной проверки урока педагога <strong>${teacher}</strong> (${subject}) по чек-листу зафиксированы зоны роста и дефициты:</p>
+                        <ul class="list-disc list-inside text-xs text-slate-700 space-y-1.5 font-medium max-h-60 overflow-y-auto pr-2">
+                            ${deficits.map(d => `<li><strong class="text-rose-700">[${d.section}] «${d.title}»):</strong> ${d.problem} (Балл: ${userAnswers[d.id]}/3)</li>`).join('')}
+                        </ul>
+                    ` : `
+                        <p class="text-xs text-emerald-700 font-bold"><i class="fa-solid fa-check-circle mr-1"></i>Все 33 критерия урока оценены на высший балл (3)!</p>
+                    `}
+                </div>
+
+                <!-- 2. SMART Target Setting -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bullseye text-emerald-600"></i>2. Постановка SMART-цели: варианты целей по чек-листу
+                    </h3>
+                    <div class="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl">
+                        <span class="text-[11px] font-bold text-emerald-800 uppercase block mb-1">Сводная SMART-цель управления качеством урока:</span>
+                        <p class="text-xs sm:text-sm text-emerald-950 font-semibold leading-relaxed">
+                            ${deficits.length > 0 ? 
+                                `Повысить качество преподавания и организации урока педагогом (${teacher}) в течение 30-45 дней путем устранения выявленных дефицитов: ${deficits.slice(0, 3).map(d => d.smartGoal).join(' ')}` :
+                                `Обеспечить трансляцию передового опыта педагога (${teacher}) по направлению «Качество современного урока» на уровне школы в течение учебного года.`
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. Object, Form & Conditional Algorithm Diagram -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-sitemap text-emerald-600"></i>3. Объект, форма контроля и алгоритм («Если то, то это…» — диаграмма)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        <div class="p-3 bg-white border border-slate-200 rounded-xl text-xs">
+                            <strong class="text-slate-800 block mb-0.5">Объект контроля:</strong>
+                            <span class="text-slate-600">Качество современного урока (${teacher} / ${subject}) по 33 подкритериям 4 разделов</span>
+                        </div>
+                        <div class="p-3 bg-white border border-slate-200 rounded-xl text-xs">
+                            <strong class="text-slate-800 block mb-0.5">Форма контроля:</strong>
+                            <span class="text-slate-600">${deficits.length > 5 ? 'Персональный тематический контроль с менторским сопровождением' : 'Оперативный мониторинг качества урока'}</span>
+                        </div>
+                    </div>
+
+                    <!-- Flowchart Box -->
+                    <div class="p-4 bg-slate-900 text-white rounded-xl space-y-3">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300 block">Диаграмма управленческого алгоритма («Если — То»):</span>
+                        <div class="space-y-2 text-xs max-h-60 overflow-y-auto pr-2">
+                            ${deficits.length > 0 ? deficits.map(d => `
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 p-2.5 bg-slate-800/80 rounded-lg border border-slate-700">
+                                    <span class="px-2 py-0.5 bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded font-bold">ЕСЛИ</span>
+                                    <span class="text-slate-200 font-medium">[${d.section}] западает показатель</span>
+                                    <i class="fa-solid fa-arrow-right text-emerald-400 hidden sm:block"></i>
+                                    <span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded font-bold">ТО</span>
+                                    <span class="text-emerald-100 font-medium">${d.ifThen.split('ТО ')[1]}</span>
+                                </div>
+                            `).join('') : `
+                                <div class="p-2.5 bg-slate-800 rounded-lg text-emerald-300">
+                                    <i class="fa-solid fa-check mr-1"></i>Все критерии урока в норме. Рекомендовано обобщение опыта педагога.
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. SWOT-Analysis Based on Checklist -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-table-cells-large text-emerald-600"></i>4. Свод-анализ на основе чек-листа
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-1">
+                            <span class="font-bold text-emerald-800 uppercase block flex items-center gap-1">
+                                <i class="fa-solid fa-shield-halved text-emerald-600"></i>S — Сильные стороны (Strengths)
+                            </span>
+                            <ul class="list-disc list-inside text-emerald-900 space-y-0.5 max-h-40 overflow-y-auto">
+                                ${strengths.length > 0 ? strengths.map(s => `<li>${s.title}</li>`).join('') : '<li>Требуется развитие базовых параметров урока</li>'}
+                            </ul>
+                        </div>
+                        <div class="p-3.5 bg-rose-50/70 border border-rose-200 rounded-xl space-y-1">
+                            <span class="font-bold text-rose-800 uppercase block flex items-center gap-1">
+                                <i class="fa-solid fa-bug text-rose-600"></i>W — Слабые стороны / Дефициты (Weaknesses)
+                            </span>
+                            <ul class="list-disc list-inside text-rose-900 space-y-0.5 max-h-40 overflow-y-auto">
+                                ${deficits.length > 0 ? deficits.map(d => `<li>${d.title}</li>`).join('') : '<li>Критические дефициты не выявлены</li>'}
+                            </ul>
+                        </div>
+                        <div class="p-3.5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-1">
+                            <span class="font-bold text-blue-800 uppercase block flex items-center gap-1">
+                                <i class="fa-solid fa-chart-line text-blue-600"></i>O — Возможности (Opportunities)
+                            </span>
+                            <p class="text-blue-900">Методическое сопровождение ментором, мастер-классы в рамках ШМО, интеграция ценностей «Адал азамат».</p>
+                        </div>
+                        <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
+                            <span class="font-bold text-amber-800 uppercase block flex items-center gap-1">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>T — Угрозы (Threats)
+                            </span>
+                            <p class="text-amber-900">Формальный подход к планированию, снижение мотивации и вовлеченности обучающихся.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Decision Base across 4 Positions and 3 Levels -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-cubes text-emerald-600"></i>5. Готовая база управленческих решений (по 4 разделам и 3 уровням)
+                    </h3>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl max-h-96">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="sticky top-0 bg-slate-100 z-10">
+                                <tr class="text-slate-700 font-bold border-b border-slate-200">
+                                    <th class="p-3">Критерий чек-листа</th>
+                                    <th class="p-3 text-blue-800">1. Организационный уровень</th>
+                                    <th class="p-3 text-emerald-800">2. Методический уровень</th>
+                                    <th class="p-3 text-amber-800">3. Мотивационный / Кадровый</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-600">
+                                ${lessonCriteria.map(c => `
+                                    <tr class="hover:bg-slate-50/80">
+                                        <td class="p-3 font-bold text-slate-800 border-r border-slate-100">${c.title}</td>
+                                        <td class="p-3 border-r border-slate-100">${c.solOrg}</td>
+                                        <td class="p-3 border-r border-slate-100">${c.solMeth}</td>
+                                        <td class="p-3">${c.solMoti}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6. Monitoring Matrix with Precise Numbers -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i>6. Мониторинг эффективности с точными цифровыми индикаторами
+                    </h3>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl max-h-96">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="sticky top-0 bg-slate-100 z-10">
+                                <tr class="text-slate-700 font-bold border-b border-slate-200">
+                                    <th class="p-3">Индикатор из чек-листа</th>
+                                    <th class="p-3 text-center">Было (До)</th>
+                                    <th class="p-3 text-center">Целевой показатель (Стало)</th>
+                                    <th class="p-3">Срок повторного ВШК</th>
+                                    <th class="p-3">Ответственный</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-600">
+                                ${lessonCriteria.map(c => `
+                                    <tr class="${userAnswers[c.id] < 3 ? 'bg-amber-50/30' : ''}">
+                                        <td class="p-3 font-semibold text-slate-800">${c.metric}</td>
+                                        <td class="p-3 text-center text-rose-600 font-bold">${c.wasVal}</td>
+                                        <td class="p-3 text-center text-emerald-600 font-bold">${c.becameVal}</td>
+                                        <td class="p-3">через 30–45 дней</td>
+                                        <td class="p-3 font-medium text-slate-700">${expert}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 7. Final Conclusion -->
+                <div class="p-4 bg-emerald-900 text-white rounded-xl space-y-1">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Итоговый управленческий вывод</span>
+                    <p class="text-xs sm:text-sm font-semibold leading-relaxed">
+                        Повышение качества образовательных услуг через оптимальное развитие направления <span class="underline underline-offset-4 decoration-emerald-400">«Качество современного урока»</span> ВШК.
+                    </p>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            updatePrintFields();
+        }
+
+        function updatePrintFields() {
+            document.getElementById('printTeacher').innerText = document.getElementById('teacherName').value || 'Не указан';
+            document.getElementById('printSubject').innerText = document.getElementById('subjectClass').value || 'Не указан';
+            document.getElementById('printDate').innerText = document.getElementById('checkDate').value || 'Не указана';
+            document.getElementById('printExpert').innerText = document.getElementById('expertName').value || 'Не указан';
+            document.getElementById('printScore').innerText = document.getElementById('scoreValue').innerText;
+            document.getElementById('printLevel').innerText = document.getElementById('levelBadge').innerText;
+        }
+
+        function scrollToResults() {
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyReportText() {
+            const teacher = document.getElementById('teacherName').value || 'Педагог';
+            const expert = document.getElementById('expertName').value || 'Зам. директора';
+            const score = document.getElementById('scoreValue').innerText;
+
+            let text = `УПРАВЛЕНЧЕСКИЙ ПРОДУКТ ВШК: Качество современного урока\n`;
+            text += `Учитель: ${teacher}\n`;
+            text += `Проверяющий: ${expert}\n`;
+            text += `Индекс ВШК: ${score} / 99 б.\n\n`;
+            text += `ВЫВОД: Повышение качества образовательных услуг через оптимальное развитие направления «Качество современного урока» ВШК.`;
+
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+            showToast('Отчет скопирован в буфер обмена');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
